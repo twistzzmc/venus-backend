@@ -6,6 +6,8 @@ import (
 
 	// "net/http"
 	"venus/internal/config"
+	"venus/internal/database"
+	"venus/internal/models"
 	// "github.com/gin-gonic/gin"
 )
 
@@ -25,13 +27,25 @@ import (
 // }
 
 func main() {
-	databaseUser, err := config.ReadConfigFile()
+	dbConf, err := config.ReadConfigFile()
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Print(databaseUser)
+	fmt.Println(dbConf)
+
+	client := database.ConnectToMongoDB(dbConf)
+	defer database.DisconnectFromMongoDB(client)
+
+	fmt.Println("Pomyślnie połączono do bazy danych")
+
+	demoShoppingListItem := models.ShoppingListItem{Name: "Mleko"}
+	err = database.InsertShoppingListItem(client, demoShoppingListItem)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// router := gin.Default()
 	// router.GET("/albums", getAlbums)
 

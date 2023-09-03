@@ -5,19 +5,20 @@ import (
 	"os"
 )
 
-type DatabaseUser struct {
+type DatabaseConfiguration struct {
 	Username string
 	Password string
+	Host     string
 }
 
 type Configuration struct {
-	MongoDB DatabaseUser
+	MongoDB DatabaseConfiguration
 }
 
-func ReadConfigFile() (DatabaseUser, error) {
+func ReadConfigFile() (DatabaseConfiguration, error) {
 	file, pathErr := os.Open("conf.json")
 	if pathErr != nil {
-		return DatabaseUser{}, pathErr
+		return DatabaseConfiguration{}, pathErr
 	}
 
 	defer file.Close()
@@ -26,7 +27,7 @@ func ReadConfigFile() (DatabaseUser, error) {
 
 	err := decoder.Decode(&configuration)
 	if err != nil {
-		return DatabaseUser{}, err
+		return DatabaseConfiguration{}, err
 	}
 
 	return configuration.MongoDB, nil
