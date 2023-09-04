@@ -4,15 +4,12 @@ import (
 	"context"
 	"fmt"
 
-	"go.mongodb.org/mongo-driver/mongo"
-
 	"venus/internal/models"
 )
 
-func InsertShoppingListItem(client *mongo.Client, item models.ShoppingListItem) error {
-	coll := client.Database("venus").Collection("shopping_list")
-
-	res, err := coll.InsertOne(context.TODO(), item)
+func InsertShoppingList(shoppingList models.ShoppingList) error {
+	coll := getShoppingListColl()
+	res, err := coll.InsertOne(context.TODO(), shoppingList)
 	if err != nil {
 		return err
 	}

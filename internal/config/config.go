@@ -15,10 +15,10 @@ type Configuration struct {
 	MongoDB DatabaseConfiguration
 }
 
-func ReadConfigFile() (DatabaseConfiguration, error) {
+func ReadConfigFile() DatabaseConfiguration {
 	file, pathErr := os.Open("conf.json")
 	if pathErr != nil {
-		return DatabaseConfiguration{}, pathErr
+		panic(pathErr)
 	}
 
 	defer file.Close()
@@ -27,8 +27,8 @@ func ReadConfigFile() (DatabaseConfiguration, error) {
 
 	err := decoder.Decode(&configuration)
 	if err != nil {
-		return DatabaseConfiguration{}, err
+		panic(err)
 	}
 
-	return configuration.MongoDB, nil
+	return configuration.MongoDB
 }
